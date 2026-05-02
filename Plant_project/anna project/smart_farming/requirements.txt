@@ -1,0 +1,27 @@
+# AI-Powered Smart Farming Hub - Dependencies
+# Compatible with Windows, Python 3.10-3.13, and Raspberry Pi
+# Use flexible versions for compatibility across Python versions
+
+# Web Framework
+Flask>=3.0.0
+
+# Computer Vision (use versions with pre-built wheels)
+opencv-python>=4.8.0
+numpy>=1.26.0
+
+# ML / Disease Detection (optional - app uses dummy fallback if not installed)
+# TensorFlow supports Python 3.9-3.12 only; skip for Python 3.13
+tensorflow>=2.15.0; python_version < "3.13"
+
+# Image processing
+Pillow>=10.0.0
+
+# Hugging Face Model Integration
+transformers>=4.35.0
+torch>=2.0.0
+huggingface_hub>=0.17.0
+scikit-learn
+joblib
+
+# Utilities
+Werkzeug>=3.0.0

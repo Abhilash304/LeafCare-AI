@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farming Hub - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- SPLASH SCREEN -->
+    <style>
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #fdfdfd;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+
+        .splash-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 1. Bouncing/Growing Icon */
+        .splash-icon {
+            font-size: 6.5rem;
+            line-height: 1;
+            margin-bottom: 5px;
+            animation: bounceIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            transform-origin: bottom center;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* 2. Gradient Text */
+        .splash-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(90deg, #1b5e20, #4caf50, #ffeb3b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmerText 3s linear infinite;
+        }
+
+        @keyframes shimmerText {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .splash-title span {
+            font-weight: 300;
+        }
+
+        .splash-subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 5px;
+            color: #777;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 3. Flowing Animated Progress Bar */
+        .splash-progress-container {
+            width: 280px;
+            height: 6px;
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid #c8e6c9;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .splash-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2e7d32 0%, #66bb6a 50%, #2e7d32 100%);
+            background-size: 200% auto;
+            border-radius: 10px;
+            animation:
+                loadProgress 2.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards,
+                flowingGradient 1.5s linear infinite;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0%;
+            }
+
+            30% {
+                width: 40%;
+            }
+
+            70% {
+                width: 80%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        @keyframes flowingGradient {
+            0% {
+                background-position: 100% center;
+            }
+
+            100% {
+                background-position: -100% center;
+            }
+        }
+    </style>
+    <div id="splash-screen">
+        <div class="splash-content">
+            <div class="splash-icon">
+                🌱
+            </div>
+            <div class="splash-title">SmartFarm<span> AI</span></div>
+            <div class="splash-subtitle">Cultivating the Future</div>
+            <div class="splash-progress-container">
+                <div class="splash-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-flower2 me-2"></i>Smart Farming Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/disease"><i class="bi bi-camera me-1"></i>Disease Detection</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history"><i class="bi bi-clock-history me-1"></i>History</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section text-center py-5">
+        <div class="container">
+            <h1 class="display-5 fw-bold text-success mb-3">
+                <i class="bi bi-diagram-3"></i> AI-Powered Smart Farming Hub
+            </h1>
+            <p class="lead text-muted">
+                Offline Disease Detection • Predictive Irrigation • Real-time Sensor Monitoring
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Sensor Cards -->
+        <div class="row g-4 mb-4">
+            <!-- Temperature -->
+            <div class="col-md-6">
+                <div class="card sensor-card h-100" id="temp-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted text-uppercase mb-2">Temperature</h6>
+                                <h2 class="mb-0" id="temp-value">--</h2>
+                                <small class="text-muted">°C</small>
+                            </div>
+                            <div class="sensor-icon temp-icon">
+                                <i class="bi bi-thermometer-half"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="badge" id="temp-badge">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Humidity -->
+            <div class="col-md-6">
+                <div class="card sensor-card h-100" id="humidity-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted text-uppercase mb-2">Humidity</h6>
+                                <h2 class="mb-0" id="humidity-value">--</h2>
+                                <small class="text-muted">%</small>
+                            </div>
+                            <div class="sensor-icon humidity-icon">
+                                <i class="bi bi-droplet-fill"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <span class="badge" id="humidity-badge">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Irrigation Status & Timestamp -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-droplet-half me-2"></i>Irrigation Status</h5>
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Irrigation Controls">
+                            <button type="button" class="btn btn-outline-primary active" id="btn-irrigation-auto"
+                                onclick="setIrrigationMode('auto', 'OFF')">Auto</button>
+                            <button type="button" class="btn btn-outline-success" id="btn-irrigation-on"
+                                onclick="setIrrigationMode('manual', 'ON')">ON</button>
+                            <button type="button" class="btn btn-outline-danger" id="btn-irrigation-off"
+                                onclick="setIrrigationMode('manual', 'OFF')">OFF</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h2 class="mb-1" id="irrigation-status">
+                                    <span class="irrigation-indicator"></span> --
+                                </h2>
+                                <p class="text-muted mb-0 small" id="irrigation-rule">
+                                    Rule: Soil moisture &lt; 40% → Irrigation ON
+                                </p>
+                            </div>
+                            <div class="irrigation-visual" id="irrigation-visual">
+                                <i class="bi bi-droplet"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Prediction Card -->
+            <div class="col-md-6">
+                <div class="card border-primary h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-robot me-2"></i>AI Irrigation Prediction</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h3 class="mb-1" id="ml-prediction-status">
+                                    <span id="ml-prediction-badge" class="badge bg-secondary">--</span>
+                                </h3>
+                                <p class="text-muted mb-0 small">
+                                    Model: RandomForestClassifier (Offline)
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                <h4 class="mb-0 text-primary" id="ml-confidence">--%</h4>
+                                <small class="text-muted">Confidence</small>
+                            </div>
+                        </div>
+                        <div class="progress mt-3" style="height: 5px;">
+                            <div id="ml-confidence-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Sensor History Chart (Upgrade 3) -->
+        <div class="row g-4 mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-graph-up-arrow me-2 text-success"></i>
+                            Live Sensor Trends
+                            <small class="text-muted fw-normal ms-2" style="font-size:.8rem;">auto-updates every
+                                3s</small>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="sensorChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-clock-history display-6 text-muted"></i>
+                        <h6 class="mt-2 text-muted">Last Updated</h6>
+                        <p class="mb-0 fw-bold fs-4" id="last-updated">--</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Quick Actions -->
+            <div class="col-md-4">
+                <div class="card h-100 bg-success text-white">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <a href="/disease" class="btn btn-light btn-lg">
+                            <i class="bi bi-camera me-2"></i>Analyze Plant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-3 bg-light text-center text-muted small">
+        <p class="mb-0">AI-Powered Smart Farming Hub • Final Year Project • Offline Capable</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        // Hide splash screen after 3 seconds
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    splash.style.visibility = 'hidden';
+                    setTimeout(() => splash.remove(), 500); // give time for transition to complete
+                }
+            }, 3000); // 3 second delay
+        });
+    </script>
+</body>
+
+</html>
