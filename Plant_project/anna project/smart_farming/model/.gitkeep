@@ -1,2 +1,0 @@
-# Place plant_disease_model.tflite here for TensorFlow Lite inference
-# Optional - app uses dummy detection if model not found
